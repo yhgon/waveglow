@@ -142,6 +142,9 @@ if __name__ == "__main__":
                         help='rank of process for distributed')
     parser.add_argument('-g', '--group_name', type=str, default='',
                         help='name of group for distributed')
+    parser.add_argument('-ch', '--checkpoint_path', type=str, default='waveglow_0',
+                        help='name of checkpoint file')
+
     args = parser.parse_args()
 
     # Parse configs.  Globals nicer in this case
