@@ -142,7 +142,7 @@ def apply_gradient_allreduce(module):
     return module
 
 
-def main(config, stdout_dir, args_str):
+def main(config, stdout_dir, checkpoint_path, args_str):
     args_list = ['train.py']
     args_list += args_str.split(' ') if len(args_str) > 0 else []
 
@@ -151,7 +151,7 @@ def main(config, stdout_dir, args_str):
     num_gpus = torch.cuda.device_count()
     args_list.append('--num_gpus={}'.format(num_gpus))
     args_list.append("--group_name=group_{}".format(time.strftime("%Y_%m_%d-%H%M%S")))
-
+    args_list.append("--check_point={}".format(checkpoint_path) ) 
     if not os.path.isdir(stdout_dir):
         os.makedirs(stdout_dir)
         os.chmod(stdout_dir, 0o775)
@@ -178,9 +178,8 @@ if __name__ == '__main__':
                         help='directory to save stoud logs')
     parser.add_argument('-ch', '--checkpoint_path', type=str, default='waveglow_0',
                         help='name of checkpoint file')
-    parser.add_argument(
-        '-a', '--args_str', type=str, default='',
-        help='double quoted string with space separated key value pairs')
+    parser.add_argument('-a', '--args_str', type=str, default='',
+                        help='double quoted string with space separated key value pairs')
 
     args = parser.parse_args()
-    main(args.config, args.stdout_dir, args.args_str)
+    main(args.config, args.stdout_dir, args.checkpoint_path args.args_str)
