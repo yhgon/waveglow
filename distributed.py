@@ -176,6 +176,8 @@ if __name__ == '__main__':
                         help='JSON file for configuration')
     parser.add_argument('-s', '--stdout_dir', type=str, default=".",
                         help='directory to save stoud logs')
+    parser.add_argument('-ch', '--checkpoint_path', type=str, default='waveglow_0',
+                        help='name of checkpoint file')
     parser.add_argument(
         '-a', '--args_str', type=str, default='',
         help='double quoted string with space separated key value pairs')
