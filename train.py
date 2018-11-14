@@ -106,8 +106,10 @@ def train(num_gpus, rank, group_name, output_directory, epochs, learning_rate,
     epoch_offset = max(0, int(iteration / len(train_loader)))
     # ================ MAIN TRAINNIG LOOP! ===================
     for epoch in range(epoch_offset, epochs):
+        start_epoch= time.perf_counter()
         print("Epoch: {}".format(epoch))
         for i, batch in enumerate(train_loader):
+            start_batch= time.perf_counter()
             model.zero_grad()
 
             mel, audio = batch
@@ -122,8 +124,8 @@ def train(num_gpus, rank, group_name, output_directory, epochs, learning_rate,
                 reduced_loss = loss.item()
             loss.backward()
             optimizer.step()
-
-            print("{}:\t{:.9f}".format(iteration, reduced_loss))
+            duration_batch= time.perf_counter() - start_batch
+            print("{}:\t{:.9f} {:.2f}s/it".format(iteration, reduced_loss,,duration_batch))
 
             if (iteration % iters_per_checkpoint == 0):
                 if rank == 0:
@@ -133,6 +135,9 @@ def train(num_gpus, rank, group_name, output_directory, epochs, learning_rate,
                                     checkpoint_path)
 
             iteration += 1
+        duration_epoch=time.perf_counter() - start_epoch
+        print("   {} time {:.2f}s/epoch".format(epoch, duration_epoch))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
